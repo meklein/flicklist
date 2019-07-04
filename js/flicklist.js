@@ -9,16 +9,16 @@ var model = {
 var api = {
 
   root: "https://api.themoviedb.org/3",
-  token: "TODO", // TODO 0 add your api key
+  token: "0b2d4c266d2d87de465c3dc414a23ace",
 
   /**
    * Given a movie object, returns the url to its poster image
    */
   posterUrl: function(movie) {
     // TODO 4b
-    // implement this function
-
-    return "http://images5.fanpop.com/image/photos/25100000/movie-poster-rapunzel-and-eugene-25184488-300-450.jpg" 
+	// implement this function
+	let url = "http://image.tmdb.org/t/p/w300/" + movie.poster_path;
+    return  url;
   }
 }
 
@@ -65,6 +65,8 @@ function searchMovies(query, callback) {
 }
 
 
+
+
 /**
  * re-renders the page with new content, based on the current state of the model
  */
@@ -76,24 +78,52 @@ function render() {
 
   // insert watchlist items
   model.watchlistItems.forEach(function(movie) {
-    var title = $("<h6></h6>").text(movie.original_title);
+
+	var title = $("<h5></h5>")
+	.text(movie.original_title)
+	.attr("class", "card-title");
 
     // TODO 1 
     // add an "I watched it" button and append it below the title
-    // Clicking should remove this movie from the watchlist and re-render
-
-    // TODO 2i
-    // apply the classes "btn btn-danger" to the "I watched it button"
+	// Clicking should remove this movie from the watchlist and re-render
+	let removeBtn = $("<button'></button>")
+		.text("I watched it")
+		.attr("class", "btn btn-danger btn-block")
+		.click(function(){
+		let index = model.watchlistItems.indexOf(movie);
+		model.watchlistItems.splice(index, 1);
+		render();
+	})
 
     // TODO 4a
     // add a poster image and append it inside the 
     // panel body above the button
+	let posterImg = $("<img>")
+	.attr("src", api.posterUrl(movie))
+	.attr("class", "card-img-top");
+
+
 
     // TODO 2g
-    // re-implement the li as a bootstrap panel with a heading and a body
-    var itemView = $("<li></li>")
-      .append(title)
-      .attr("class", "item-watchlist");
+	// re-implement the li as a bootstrap panel with a heading and a body
+
+	var cardBody = $("<div></div>")
+		.attr("class", "card-body")
+		.append(title)
+		.append(removeBtn);
+
+	var cardContainer = $("<div></div>")
+		.attr("class", "card")
+		.append(posterImg)
+		.append(cardBody);
+
+	var itemView = $("<li></li>")
+	  .attr("class", "item-watchlist list-inline-item")
+	  .append(cardContainer);
+
+
+	
+
 
     $("#section-watchlist ul").append(itemView);
   });
@@ -110,7 +140,8 @@ function render() {
     var title = $("<h4></h4>").text(movie.original_title);
 
     var button = $("<button></button>")
-      .text("Add to Watchlist")
+	  .text("Add to Watchlist")
+	  .attr("class", "btn btn-primary")
       .click(function() {
         model.watchlistItems.push(movie);
         render();
@@ -120,7 +151,8 @@ function render() {
     var overview = $("<p></p>").text(movie.overview);
 
     // append everything to itemView, along with an <hr/>
-    var itemView = $("<li></li>")
+	var itemView = $("<li></li>")
+	  .attr("class", "list-group-item list-group-item-action")
       .append(title)
       .append(overview)
       .append(button);
@@ -136,4 +168,8 @@ function render() {
 // and pass the render function as its callback
 $(document).ready(function() {
   discoverMovies(render);
+//   $("#submit").click(function(){
+// 	  let query = $("#query").val();
+// 	searchMovies(query);
+//   })
 });
