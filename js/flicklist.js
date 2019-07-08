@@ -168,8 +168,5 @@ function render() {
 // and pass the render function as its callback
 $(document).ready(function() {
   discoverMovies(render);
-//   $("#submit").click(function(){
-// 	  let query = $("#query").val();
-// 	searchMovies(query);
-//   })
+
 });
